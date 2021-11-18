@@ -1,0 +1,22 @@
+Package: Abby
+Type: Package
+Title: Run Abby Shiny App
+Version: 0.1
+Authors@R: 
+    person("Sompob", "Saralamba", ,"saralamba@gmail.com" , role = c("aut", "cre"),comment = c(ORCID = "0000-0002-5460-8447" ,GitHub="https://github.com/slphyx"))
+Maintainers@R: 
+    person("Tanaphum", "Wichaita", ,"tana_jumbo@hotmail.com",role = c("aut", "cre"),comment = c(GitHub="https://github.com/tanaphum"))
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+Depends: 
+Imports:
+  DT,
+  ggplot2,
+  shiny,
+  shinythemes,
+  stringr,
+  markdown
