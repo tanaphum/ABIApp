@@ -1,3 +1,6 @@
+![image](https://img.shields.io/badge/Code-R-blue)
+![image](https://img.shields.io/badge/Package-R-blue)
+![image](https://img.shields.io/badge/Abby-V%200.1-blue)
 ## Install Package
 
 ```{r}
