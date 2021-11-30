@@ -12,7 +12,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
-Depends: 
 Imports:
   DT,
   ggplot2,
@@ -20,3 +19,6 @@ Imports:
   shinythemes,
   stringr,
   markdown
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

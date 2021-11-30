@@ -8,7 +8,7 @@ library(shiny)
 library(shinythemes)
 library(stringr)
 library(ggplot2)
-library(DT)
+library(htmltools)
 
 # min/max columns
 col.order <- c(3,4)
@@ -26,6 +26,10 @@ Markers.list <- function(data){
 ## get row data from input maker
 Marker.data <- function(marker, data, OutTable = F){
     tmp <- data[data$Genetic.marker==marker,]
+   colnames(tmp) <- c( "Genetic.marker", "Order Suborder \n Mean", "SD" ,"Min" ,"Max",
+                       "Family \n Mean", "SD" ,"Min" ,"Max",
+                       "Genus \n Mean" , "SD" ,"Min" ,"Max",
+                       "Species \n Mean" ,"SD" ,"Min" ,"Max")
     if(OutTable == F)
         return(as.numeric(tmp[1,2:ncol(tmp)]))
     else
@@ -47,6 +51,7 @@ MinMax <- function(level, marker, data){
 ## check if x is between left and right
 Between <- function(x, left, right){
   if(x < 0) return(F)
+  if(is.na(x >= left & x <= right)) return(F)
   else if(length(x >= left & x <= right) ==0) return(F)
     else return(x >= left & x <= right)
 }
@@ -98,7 +103,7 @@ Load.data <- function(group){
 Check.distance.between <- function(group,distance,marker){
 
     data <- Load.data(group)
-    markerNumber <-as.numeric(rownames(x[x$Genetic.marker == marker,]))
+    markerNumber <-as.numeric(rownames(data[data$Genetic.marker == marker,]))
     #min max Species
     if(Between(distance,as.numeric(data$X.10[markerNumber]),as.numeric(data$X.11[markerNumber]))){
       #Species
@@ -143,18 +148,17 @@ ShowRanges <- function(ranges, distance=NULL, group = NULL,marker=NULL){
     # print(ranges)
 
     grp <- ggplot(data = ranges, aes(x=Min, xend=Max, y=level, colour=level)) +
-        geom_segment(aes(xend=Max, yend=level), linetype=1, size=2) +
-        geom_label(aes(label=str_wrap(level,12), x=(Min + Max)/2),y=4.3, size=5) +
-        scale_colour_brewer(palette = "Set1") +
-        xlab("Genetic Distance")+ ylab("Level")+
-        scale_y_discrete()
-        theme_bw() +
-        theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank(),
-              aspect.ratio = .2,
-              legend.position="none",
-              axis.text.y=element_blank(),
-              axis.ticks.y=element_blank()) +
-        ggtitle(paste(group,":" ,marker))
+      geom_segment(aes(xend=Max, yend=level), linetype=1, size=2) +
+      geom_label(aes(label=str_wrap(level,12), x=(Min + Max)/2), size=5) +
+      scale_colour_brewer(palette = "Set1") +
+      xlab("Genetic Distance")+ ylab("Level")+
+      theme_bw() +
+      theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank(),
+            aspect.ratio = .2,
+            legend.position="none",
+            axis.text.y=element_blank(),
+            axis.ticks.y=element_blank()) +
+      ggtitle(paste(group,":" ,marker))
 
     if(!is.null(distance)){
         grp <- grp + geom_vline(xintercept = distance,linetype="longdash", size=1, col="gray")
@@ -192,6 +196,7 @@ ui.bak <- fluidPage(
 ui <- fluidPage(
     title = "AbbyApp",
     theme = shinytheme("readable"),
+    includeCSS("./www/css/style.css"),
     navbarPage("AbbyApp",
         tabPanel("About",
             includeMarkdown("./www/text/about.md")
@@ -218,18 +223,18 @@ ui <- fluidPage(
             actionButton('submit',"Go!"),
             hr(),
             fluidRow(
-                tabsetPanel(
-                    tabPanel("Graph",
+
+
                         column(8,
                             plotOutput('distplot')
                         ),
                         column(4,
-                            htmlOutput('Abby.ans')
+                            htmlOutput('AbbyText')
                         ),
-                        DTOutput('tbl')
+                        tableOutput('tbl')
 
-                    )
-                )
+
+
             )
 
         )
@@ -271,8 +276,8 @@ server <- function(input, output) {
 
         #Species Genus Family Order
         #NAS NS NT TR CE
-        output$Abby.ans <- renderText({
-
+        output$AbbyText <- renderText({
+          req(values$displayTable)
           if(values$distance==0){
             if(values$group == "NAS" && (input$marker =="18S rRNA" || input$marker =="28S rRNA" || input$marker =="ITS1" || input$marker =="ITS2" || input$marker =="COII" ||input$marker =="12S rRNA")){
               HTML(paste("<h4>•	Suggest to use mt 16S rRNA gene or mt COII as an alternative genetic marker <br/> <br/>
@@ -313,7 +318,7 @@ server <- function(input, output) {
                          •	But caution for COI primers (universal primers might not be able to amplify, should use specific primers)
                          </h4>"))
               }else if (values$group == "NT"){
-                paste(h2("Take out?"))
+                paste(h2("They are between in", values$distanceBetween))
               }else if (values$group == "TR"){
                 HTML(paste("<h4>•	Suggest 28S, but need to caution (low sequence variation, alignment region)<br/> <br/>
                          •	Other alternative is the mt genetic markers
@@ -322,7 +327,7 @@ server <- function(input, output) {
                 paste(h3("Suggest COI or 16S"))
               }
             }else if(values$distanceBetween == "Order-Family"){
-              paste(h2("Take out?"))
+              paste(h2("They are between in", values$distanceBetween))
             }else if(values$distanceBetween == "Out"){
               #out of bounds
               paste(h1("Out Of Bounds"))
@@ -346,7 +351,7 @@ server <- function(input, output) {
 
     })
 
-    output$tbl <- renderDT({
+    output$tbl <- renderTable({
       req(values$displayTable)
       Marker.data(data = values$data, marker = input$marker, OutTable = TRUE)
       })
