@@ -2,9 +2,8 @@
 
 export(Abby_Helminth)
 export(run_app_Abby)
-import(DT)
 import(ggplot2)
-import(markdown)
+import(rmarkdown)
 import(shiny)
 import(shinythemes)
 import(stringr)
