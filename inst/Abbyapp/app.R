@@ -9,6 +9,7 @@ library(shinythemes)
 library(stringr)
 library(ggplot2)
 library(htmltools)
+library(markdown)
 
 # min/max columns
 col.order <- c(3,4)
