@@ -3,7 +3,7 @@
 export(Abby_Helminth)
 export(run_app_Abby)
 import(ggplot2)
-import(rmarkdown)
+import(markdown)
 import(shiny)
 import(shinythemes)
 import(stringr)
