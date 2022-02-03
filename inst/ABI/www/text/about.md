@@ -1,4 +1,4 @@
-# AbbyApp – A tool for helminth species delimitation at various taxonomic levels
+# ABI App – A tool for helminth species delimitation at various taxonomic levels
 
 Background information:
 
@@ -8,7 +8,7 @@ To circumvent these gaps, the purpose of this application is to aid in helminth 
 
 What the application does:
 
-AbbyApp uses the data obtained from Chan et al. (2021), where estimated cut-off genetic distance values for nematodes, trematodes, and cestodes were generated for ten genetic markers using the K-means clustering algorithm (5). The ten genetic markers are: nuclear 18S rRNA gene, nuclear 28S rRNA gene, nuclear ITS1 region, nuclear ITS2 region, mitochondrial 12S rRNA gene, mitochondrial 16S rRNA gene, and mitochondrial protein-coding genes _COI_, _COII_, _NAD1_, _cytB_. Briefly, cut-off genetic distances for each group of helminths per genetic marker were estimated using the K-means algorithm implemented in Wolfram Mathematica 12.1 (6). The minimum and maximum genetic distances were obtained for each taxonomic hierarchy level as a basis for taxonomic boundaries.
+ABI App uses the data obtained from Chan et al. (2021), where estimated cut-off genetic distance values for nematodes, trematodes, and cestodes were generated for ten genetic markers using the K-means clustering algorithm (5). The ten genetic markers are: nuclear 18S rRNA gene, nuclear 28S rRNA gene, nuclear ITS1 region, nuclear ITS2 region, mitochondrial 12S rRNA gene, mitochondrial 16S rRNA gene, and mitochondrial protein-coding genes _COI_, _COII_, _NAD1_, _cytB_. Briefly, cut-off genetic distances for each group of helminths per genetic marker were estimated using the K-means algorithm implemented in Wolfram Mathematica 12.1 (6). The minimum and maximum genetic distances were obtained for each taxonomic hierarchy level as a basis for taxonomic boundaries.
 
 \&lt;Name of application\&gt; allows users to input their genetic distances obtained from their taxa of interest from the three groups of helminths. The queried value will be compared against the database of estimated cut-off genetic distance, and the user will be able to know where their queried value is positioned and which taxonomic hierarchy level it falls into. Additionally, depending on the genetic distance, users will be able to determine if their taxa are conspecific or not. The usefulness of \&lt;Name of application\&gt; lies in its convenience and simplicity, with just the input of genetic distances required for the taxa in question. Further recommendations may also be provided, depending on the outcome of the query.
 

@@ -1,5 +1,5 @@
 
-##### AbbyApp  by slphyx
+##### ABIyApp  by slphyx
 
 app_version <- "V0.1"
 
@@ -172,7 +172,7 @@ ShowRanges <- function(ranges, distance=NULL, group = NULL,marker=NULL){
 
 
 ui.bak <- fluidPage(
-    titlePanel("Abby App"),
+    titlePanel("ABI App"),
     sidebarLayout(
         sidebarPanel(
             selectInput(inputId = 'group', label = "Please choose your helminth group",
@@ -195,10 +195,10 @@ ui.bak <- fluidPage(
 )
 
 ui <- fluidPage(
-    title = "AbbyApp",
+    title = "ABI App",
     theme = shinytheme("readable"),
     includeCSS("./www/css/style.css"),
-    navbarPage("AbbyApp",
+    navbarPage("ABIApp",
         tabPanel("About",
             includeMarkdown("./www/text/about.md")
         ),

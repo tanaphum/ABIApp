@@ -11,24 +11,24 @@
 #' ("18S rRNA","28S rRNA","ITS1","ITS2","COI","COII","cytB","NAD1","12S rRNA","16S rRNA")
 #' @return
 #' Plot of ggplot
-#' @export Abby_Helminth
+#' @export ABI_Helminth
 #' @examples
-#' Abby_Helminth()
-#' Abby_Helminth(0.06)
-#' Abby_Helminth(0.02,"NS","18S rRNA")
-#' Abby_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
+#' ABI_Helminth()
+#' ABI_Helminth(0.06)
+#' ABI_Helminth(0.02,"NS","18S rRNA")
+#' ABI_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
 #'
 #' Warning!Some groups don't some markers
 #' plot will show Noting
-#' #Abby_Helminth(0.02,"CE","28S rRNA")
+#' #ABI_Helminth(0.02,"CE","28S rRNA")
 #'
 #' @import ggplot2 stringr utils
 
-Abby_Helminth <- function(distance=0, group = "NAS",marker="18S rRNA"){
+ABI_Helminth <- function(distance=0, group = "NAS",marker="18S rRNA"){
   data <- Load.data(group = group)
   ranges <- Level.Available(data = data, marker = marker, level.out = TRUE)
   distanceBetween <- Check.distance.between(group=group,distance=distance,marker=marker)
-  Abby_warning(distance = distance,group = group, marker = marker,distanceBetween=distanceBetween)
+  ABI_warning(distance = distance,group = group, marker = marker,distanceBetween=distanceBetween)
   ShowRanges(ranges = ranges,group = group,distance = distance, marker = marker)
 
 }
@@ -71,13 +71,13 @@ MinMax <- function(level, marker, data){
 }
 
 Load.data <- function(group){
-  dir <- system.file(package='Abby')
+  dir <- system.file(package='ABI')
   data <- switch(group,
-                 NAS = read.csv(paste0(dir,'/Abbyapp/data/nematode1.csv')),
-                 NS = read.csv(paste0(dir,'/Abbyapp/data/nematode2.csv')),
-                 NT = read.csv(paste0(dir,'/Abbyapp/data/nematode3.csv')),
-                 TR = read.csv(paste0(dir,'/Abbyapp/data/trematode.csv')),
-                 CE = read.csv(paste0(dir,'/Abbyapp/data/cestode.csv')))
+                 NAS = read.csv(paste0(dir,'/ABI/data/nematode1.csv')),
+                 NS = read.csv(paste0(dir,'/ABI/data/nematode2.csv')),
+                 NT = read.csv(paste0(dir,'/ABI/data/nematode3.csv')),
+                 TR = read.csv(paste0(dir,'/ABI/data/trematode.csv')),
+                 CE = read.csv(paste0(dir,'/ABI/data/cestode.csv')))
   return(data)
 }
 
@@ -162,7 +162,7 @@ ShowRanges <- function(ranges, distance=NULL, group = NULL,marker=NULL){
   return(grp)
 
 }
-Abby_warning <-function(distance,group,marker,distanceBetween){
+ABI_warning <-function(distance,group,marker,distanceBetween){
   if(distance==0){
     if(group == "NAS" && (marker =="18S rRNA" || marker =="28S rRNA" || marker =="ITS1" || marker =="ITS2" || marker =="COII" ||marker =="12S rRNA")){
       warning("• Suggest to use mt 16S rRNA gene or mt COII as an alternative genetic marker\n• Although 18S has the smallest gap, but the low sequence variation at the genus-species level is challenging for species delimitation\n• Suggest nematode 16S primer from nematode systematics paper")
