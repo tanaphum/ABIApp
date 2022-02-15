@@ -1,7 +1,7 @@
 
-##### AbbyApp  by slphyx
+##### ABIyApp  by slphyx
 
-app_version <- "V0.1"
+app_version <- "V0.2"
 
 
 library(shiny)
@@ -9,6 +9,26 @@ library(shinythemes)
 library(stringr)
 library(ggplot2)
 library(htmltools)
+library(markdown)
+library(shinyWidgets)
+
+
+
+flag.choose <- function(language) {
+  switch(language,
+         EN = "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/gb.svg",
+         TH = "https://cdn.rawgit.com/lipis/flag-icon-css/master/flags/4x3/th.svg",
+         )
+}
+
+#changeLanguage EN to TH include Document path
+changeLanguage <-function(language) {
+
+    
+  switch(language,
+         EN = "TH",
+         TH = "EN")
+}
 
 # min/max columns
 col.order <- c(3,4)
@@ -171,7 +191,7 @@ ShowRanges <- function(ranges, distance=NULL, group = NULL,marker=NULL){
 
 
 ui.bak <- fluidPage(
-    titlePanel("Abby App"),
+    titlePanel("ABI App"),
     sidebarLayout(
         sidebarPanel(
             selectInput(inputId = 'group', label = "Please choose your helminth group",
@@ -194,18 +214,39 @@ ui.bak <- fluidPage(
 )
 
 ui <- fluidPage(
-    title = "AbbyApp",
+    title = "ABI App",
     theme = shinytheme("readable"),
     includeCSS("./www/css/style.css"),
-    navbarPage("AbbyApp",
+    navbarPage("ABIApp",
         tabPanel("About",
-            includeMarkdown("./www/text/about.md")
+            includeMarkdown("./www/text/about.md"),
+            tags$img(id="Diagram",src="./img/Abi_Diagram.png" ,alt="Abi Diagram"),
+        ),
+        tabPanel("Quick guidelines",
+                 fluidRow(
+                 column(10,tags$h4("Quick guidelines")),
+                 column(2,uiOutput("button.flag"))
+                 ),
+                 navbarPage("",
+                   tabPanel("Before you start",
+                            uiOutput("beforeStart")
+                            ),
+                   tabPanel("Input data",
+                            uiOutput("inputData")
+                            ),
+                   tabPanel("Output visualization",
+                            uiOutput("outputVisualization")
+                            ),
+                   tabPanel("Suggested primers",
+                            uiOutput("suggestedPrimers")
+                            ),
+                 ),
         ),
         tabPanel("Application",
             fluidRow(
                 column(4,
-                    numericInput(inputId = 'distance', label = "Genetic distance between taxa of interest (p-distance:0-1):
-", min = 0,max = 1, step = 0.001, value = 0)
+                    numericInput(inputId = 'distance', label = "Genetic distance between taxa of interest (p-distance:0-1):",
+                                 min = 0,max = 1, step = 0.001, value = 0)
                 ),
                 column(4,
                     selectInput(inputId = 'group', label = "Helminth group :",
@@ -248,7 +289,8 @@ server <- function(input, output) {
 
     values <- reactiveValues()
     values$displayTable <- F
-
+    values$language <- "EN"
+    
     output$geninput.marker <- renderUI({
 
         values$group <- Convert.group(input$group)
@@ -261,7 +303,53 @@ server <- function(input, output) {
             selectInput('marker',label = "Genetic marker :", choices = values$marker.list, selected = NULL)
         )
     })
-
+    
+    
+    values$MD_Before <- "./www/text/Before you start.md"
+    values$MD_InputData <- "./www/text/Input data.md"
+    values$MD_Visualization <-"./www/text/Output visualization.md"
+    values$MD_SuggestedPrimers <- "./www/text/Suggested primers.md"
+    
+    
+    output$beforeStart<- renderUI({
+      includeMarkdown(values$MD_Before)
+    })
+    output$inputData <- renderUI({
+      includeMarkdown(values$MD_InputData)
+    })
+    output$outputVisualization <- renderUI({
+      includeMarkdown(values$MD_Visualization)
+    })
+    output$suggestedPrimers<- renderUI({
+      includeMarkdown(values$MD_SuggestedPrimers)
+    })
+    
+    output$button.flag <- renderUI({
+      tags$button(
+        id = "language_button",
+        class = "btn action-button",
+        tags$img(src = flag.choose(values$language),
+                 height = "50px")
+      )
+    })
+    
+    ### Change Language
+    observeEvent(input$language_button, {
+      values$MD_Before <-   switch(values$language,
+                            EN = "./www/text/Before you start_TH.md",
+                            TH = "./www/text/Before you start.md")
+      values$MD_InputData <- switch(values$language,
+                             EN = "./www/text/Input data_TH.md",
+                             TH = "./www/text/Input data.md")
+      values$MD_Visualization <- switch(values$language,
+                                 EN = "./www/text/Output visualization_TH.md",
+                                 TH = "./www/text/Output visualization.md")
+      values$MD_SuggestedPrimers <- switch(values$language,
+                                    EN = "./www/text/Suggested primers_TH.md",
+                                    TH = "./www/text/Suggested primers.md")
+      values$language <- changeLanguage(values$language)
+      
+    })
 
     observeEvent(input$submit,{
 

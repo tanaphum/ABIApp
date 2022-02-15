@@ -7,7 +7,7 @@
 #'
 #' @import shiny shinythemes stringr ggplot2 DT markdown
 
-run_app_Abby <- function(options = list()) {
-  app_dir <- system.file("Abbyapp", package = "Abby")
+run_app_ABI <- function(options = list()) {
+  app_dir <- system.file("ABI", package = "ABI")
   shiny::shinyAppDir(app_dir, options = options)
 }

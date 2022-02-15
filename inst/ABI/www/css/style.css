@@ -1,0 +1,13 @@
+#AbbyText h4,h3,h2{
+    color: red;
+    border: solid;
+    padding: 15px;
+}
+#Diagram{
+  width: 1080px;
+  height: 340px;
+}
+img[alt=picture] { 
+  width: 900px; 
+  height: 135px;
+}

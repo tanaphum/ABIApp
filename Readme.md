@@ -1,11 +1,11 @@
 ![image](https://img.shields.io/badge/Code-R-blue)
 ![image](https://img.shields.io/badge/Package-R-blue)
-![image](https://img.shields.io/badge/Abby-V%200.1-blue)
+![image](https://img.shields.io/badge/ABI-V%200.1-blue)
 ## Install Package
 
 ```{r}
 install.packages("devtools")
-devtools::install_github("slphyx/AbbyApp")
+devtools::install_github("slphyx/ABI")
 ```
 
 or
@@ -13,19 +13,19 @@ or
 ```{r}
 install.packages("devtools")
 library(devtools)
-install_github("slphyx/AbbyApp")
+install_github("slphyx/ABI")
 ```
 
 
 ## Use Package
 
 ```{r}
-Abby::run_app_Abby()
+Abby::run_app_ABI()
 ```
 
 or
 
 ```{r}
-library(Abby)
-run_app_Abby()
+library(ABI)
+run_app_ABI()
 ```
