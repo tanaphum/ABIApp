@@ -217,6 +217,9 @@ ui <- fluidPage(
     title = "ABI App",
     theme = shinytheme("readable"),
     includeCSS("./www/css/style.css"),
+    div(
+    tags$img(id="ABIApp",src="./img/ABI_app.png" ,alt="ABI App"),
+    ),
     navbarPage("ABIApp",
         tabPanel("About",
             includeMarkdown("./www/text/about.md"),
