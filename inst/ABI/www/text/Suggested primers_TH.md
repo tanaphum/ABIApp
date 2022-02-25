@@ -1,7 +1,5 @@
-#### แนะนำให้ใช้เครื่องหมายทางพันธุกรรม
+#### แนะนำไพรเมอร์
 
-แนะนำให้ใช้เครื่องหมายทางพันธุกรรม :
+การแนะนำไพรเมอร์ :
 
-แนะนำให้ใช้เครื่องหมายทางพันธุกรรมชนิดอื่นเพื่อการวิเคราะห์ตีความผลลัพธ์ที่ดีขึ้น โดย ABIapp จะแนะนำเครื่องหมายทางพันธุกรรมที่มีศักยภาพให้แก่ผู้ใช้ในกล่องสีแดง
-
-Primers that can cover broad species range for helminths using the nuclear 18S and 28S rRNA genes, mitochondrial 12S and 16S rRNA genes, and the mitochondrial COI gene are suggested below.
+ไพรเมอร์ที่สามารถครอบคลุมช่วงสปีชีส์กว้างๆ สำหรับหนอนพยาธิโดยใช้ 8S and 28S rRNA genes, mitochondrial 12S and 16S rRNA genes และ mitochondrial COI gene ตามการแนะนำด้านล่าง 
