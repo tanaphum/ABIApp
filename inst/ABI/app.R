@@ -227,11 +227,11 @@ ui <- fluidPage(
             ),
             bs_accordion(id = "about") %>%
               bs_set_opts(panel_type = "default", use_heading_link = TRUE) %>%
-              bs_append(title = "General Information", content = includeMarkdown("")) %>%
-              bs_append(title = "How ABI app works", content = includeMarkdown("")) %>%
-              bs_append(title = "Benefits", content = includeMarkdown("")) %>%
-              bs_append(title = "Assumptions", content = includeMarkdown("")) %>%
-              bs_append(title = "References", content = includeMarkdown(""))
+              bs_append(title = "General Information", content = includeMarkdown("./www/text/General Information.md")) %>%
+              bs_append(title = "How ABI app works", content = includeMarkdown("./www/text/app work.md")) %>%
+              bs_append(title = "Benefits", content = includeMarkdown("./www/text/Benefits.md")) %>%
+              bs_append(title = "Assumptions", content = includeMarkdown("./www/text/Assumptions.md")) %>%
+              bs_append(title = "References", content = includeMarkdown("./www/text/References.md"))
               
             
         ),
@@ -251,7 +251,8 @@ ui <- fluidPage(
                             uiOutput("outputVisualization")
                             ),
                    tabPanel("Suggested primers",
-                            uiOutput("suggestedPrimers")
+                            uiOutput("suggestedPrimers"),
+                              a("Suggested PCR primers for ABIapp",target="_blank",href="pdf/Suggested_PCR_primers_for_ABIapp.pdf")
                             )
                  )
         ),

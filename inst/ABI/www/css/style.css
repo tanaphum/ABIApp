@@ -4,15 +4,22 @@
     padding: 15px;
 }
 #Diagram{
-  width: 1080px;
-  height: 340px;
+  width: 95%;
+  height: 95%;
 }
+
 #ABIApp{
     width: 600px;
   height: 340px;
   display: block;  
 margin-left: auto;  
 margin-right: auto;  
+}
+#about{
+    width: 80%;
+  height: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 img[alt=picture] { 
   width: 900px; 

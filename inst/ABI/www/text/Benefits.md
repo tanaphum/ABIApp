@@ -1,0 +1,1 @@
+Users will be able to determine if their taxa are conspecific or not. The usefulness of ABI lies in its convenience and simplicity, with just the input of genetic distances required for the taxa in question. Further recommendations may also be provided, depending on the outcome of the query.
