@@ -399,34 +399,41 @@ server <- function(input, output) {
 
             if(values$distanceBetween == "Genus-Species"){
               if(values$group == "NAS" || values$group == "NS"){
-                HTML(paste("<h4>•	Suggest to use mt 16S rRNA gene or mt COII as an alternative genetic marker <br/> <br/>
-                         •	Although 18S has the smallest gap, but the low sequence variation at the genus-species level is challenging for species delimitation<br/>  <br/>
-                         •	Suggest nematode 16S primer from nematode systematics paper
-                         </h4>"))
+                HTML(paste("<h4>.	Suggest using the mt 16S rRNA or COII gene as an alternative genetic marker
+                                .	Refer to the suggested PCR primer list for the 16S primer for nematodes
+                           </h4>"))
               }else if (values$group == "NT"){
-                paste(h3("Suggest to use mt 12S"))
+                paste(h4(".	Suggest using the mt 12S rRNA gene as an alternative genetic marker
+                          .	Refer to the suggested PCR primer list for the 12S primer for nematodes
+                        "))
               }else if (values$group == "TR"){
-                HTML(paste("<h4>•	Suggest to use mt 16S <br/> <br/>
-                         •	Although 18S has small gap (same as 16S), but the low sequence variation at the genus-species level is challenging for species delimitation
-                         </h4>"))
+                HTML(paste("<h4>.	Suggest using the mt 16S rRNA gene as an alternative genetic marker
+                                .	Refer to the suggested PCR primer list for the 16S primer for platyhelminths
+                            </h4>"))      
               }else if (values$group == "CE"){
-                paste(h3("Suggest to use cytB or 12S (but rarely use cytB for cestodes)"))
+                paste(h4(".	Suggest using the mt 12S rRNA gene as an alternative genetic marker
+                          .	Refer to the suggested PCR primer list for the 12S primer for platyhelminths
+                        "))
               }
             }else if(values$distanceBetween == "Family-Genus"){
               if(values$group == "NAS" ){
-                paste(h3("Suggest to use mt 12S rRNA gene as an alternative genetic marker, with primer from nematode systematics paper"))
+                paste(h4(".	Suggest using the mt 12S rRNA gene as an alternative genetic marker
+                          .	Refer to the suggested PCR primer list for the 12S primer for nematodes
+                         "))
               }else if (values$group == "NS"){
-                HTML(paste("<h4>•	Suggest to use mt COI or mt 12S or mt 16S<br/> <br/>
-                         •	But caution for COI primers (universal primers might not be able to amplify, should use specific primers)
-                         </h4>"))
+                HTML(paste("<h4>.	Suggest using the mt COI, 12S, or 16S rRNA gene as an alternative genetic marker
+                                .	Refer to the suggested PCR primer list
+                            </h4>"))
               }else if (values$group == "NT"){
                 paste(h2("They are between in", values$distanceBetween))
               }else if (values$group == "TR"){
-                HTML(paste("<h4>•	Suggest 28S, but need to caution (low sequence variation, alignment region)<br/> <br/>
-                         •	Other alternative is the mt genetic markers
-                         </h4>"))
+                HTML(paste("<h4>.	Suggest using the nuclear 28S rRNA gene as an alternative genetic marker
+                                .	Refer to the suggested PCR primer list for the 28S primer for platyhelminths
+                            </h4>"))
               }else if (values$group == "CE"){
-                paste(h3("Suggest COI or 16S"))
+                paste(h4(".	Suggest using the mt 16S rRNA or COI gene as an alternative genetic marker
+                          .	Refer to the suggested PCR primer list
+                          "))
               }
             }else if(values$distanceBetween == "Order-Family"){
               paste(h2("They are between in", values$distanceBetween))
