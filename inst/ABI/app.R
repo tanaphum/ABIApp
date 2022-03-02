@@ -199,11 +199,11 @@ ShowRanges <- function(ranges, distance=NULL, group = NULL,marker=NULL){
 #                           "Nematode (Trichocephalida)",
 #                           "Trematode", "Cestode")
 #                         ),
-# 
+#
 #             uiOutput('geninput.marker'),
 #             uiOutput('geninput.level'),
 #             actionButton('submit',"Submit")
-# 
+#
 #         ),
 #         mainPanel(
 #             htmlOutput('Abby.ans'),
@@ -215,7 +215,7 @@ ShowRanges <- function(ranges, distance=NULL, group = NULL,marker=NULL){
 ui <- fluidPage(
     title = "ABI App",
     theme = shinytheme("readable"),
-    
+
     navbarPage("ABIApp",
         tabPanel("About",
             # includeMarkdown("./www/text/about.md"),
@@ -232,8 +232,8 @@ ui <- fluidPage(
               bs_append(title = "Benefits", content = includeMarkdown("./www/text/Benefits.md")) %>%
               bs_append(title = "Assumptions", content = includeMarkdown("./www/text/Assumptions.md")) %>%
               bs_append(title = "References", content = includeMarkdown("./www/text/References.md"))
-              
-            
+
+
         ),
         tabPanel("Quick guidelines",
                  fluidRow(
@@ -304,7 +304,7 @@ server <- function(input, output) {
     values <- reactiveValues()
     values$displayTable <- F
     values$language <- "EN"
-    
+
     output$geninput.marker <- renderUI({
 
         values$group <- Convert.group(input$group)
@@ -317,14 +317,14 @@ server <- function(input, output) {
             selectInput('marker',label = "Genetic marker :", choices = values$marker.list, selected = NULL)
         )
     })
-    
-    
+
+
     values$MD_Before <- "./www/text/Before you start.md"
     values$MD_InputData <- "./www/text/Input data.md"
     values$MD_Visualization <-"./www/text/Output visualization.md"
     values$MD_SuggestedPrimers <- "./www/text/Suggested primers.md"
-    
-    
+
+
     output$beforeStart<- renderUI({
       includeMarkdown(values$MD_Before)
     })
@@ -337,16 +337,16 @@ server <- function(input, output) {
     output$suggestedPrimers<- renderUI({
       includeMarkdown(values$MD_SuggestedPrimers)
     })
-    
+
     output$button.flag <- renderUI({
       tags$button(
         id = "language_button",
         class = "btn action-button",
         style='background-color:transparent',
-        tags$img(id = "flag",src = flag.choose(values$language),height = "50px")
+        tags$img(id = "flag",src = flag.choose(values$language),height = "25px")
       )
     })
-    
+
     ### Change Language
     observeEvent(input$language_button, {
       values$MD_Before <-   switch(values$language,
@@ -362,7 +362,7 @@ server <- function(input, output) {
                                     "EN" = "./www/text/Suggested primers_TH.md",
                                     "TH" = "./www/text/Suggested primers.md")
       values$language <- changeLanguage(values$language)
-      
+
     })
 
     observeEvent(input$submit,{
@@ -382,15 +382,15 @@ server <- function(input, output) {
           req(values$displayTable)
           if(values$distance==0){
             if(values$group == "NAS" && (input$marker =="18S rRNA" || input$marker =="28S rRNA" || input$marker =="ITS1" || input$marker =="ITS2" || input$marker =="COII" ||input$marker =="12S rRNA")){
-              HTML(paste("<h4>•	Suggest to use mt 16S rRNA gene or mt COII as an alternative genetic marker <br/> <br/>
-                         •	Although 18S has the smallest gap, but the low sequence variation at the genus-species level is challenging for species delimitation<br/>  <br/>
-                         •	Suggest nematode 16S primer from nematode systematics paper
+              HTML(paste("<h4><ul><li>Suggest to use mt 16S rRNA gene or mt COII as an alternative genetic marker</li>
+                         <li>Although 18S has the smallest gap, but the low sequence variation at the genus-species level is challenging for species delimitation</li>
+                         <li>Suggest nematode 16S primer from nematode systematics paper</li><ul>
                          </h4>"))
             }else if (values$group == "NT" && (input$marker =="18S rRNA" || input$marker =="ITS2")){
               paste(h3("Suggest to use mt 12S"))
             }else if (values$group == "TR"&& (input$marker =="18S rRNA" || input$marker =="ITS1" || input$marker =="ITS2")){
-              HTML(paste("<h4>•	Suggest to use mt 16S <br/> <br/>
-                         •	Although 18S has small gap (same as 16S), but the low sequence variation at the genus-species level is challenging for species delimitation
+              HTML(paste("<h4><ul><li>Suggest to use mt 16S </li>
+                         <li>Although 18S has small gap (same as 16S), but the low sequence variation at the genus-species level is challenging for species delimitation</li></ul>
                          </h4>"))
             }else if (values$group == "CE"&& input$marker =="12S rRNA"){
               paste(h3("Recommendation to use another mt genetic marker"))
@@ -399,41 +399,41 @@ server <- function(input, output) {
 
             if(values$distanceBetween == "Genus-Species"){
               if(values$group == "NAS" || values$group == "NS"){
-                HTML(paste("<h4>.	Suggest using the mt 16S rRNA or COII gene as an alternative genetic marker
-                                .	Refer to the suggested PCR primer list for the 16S primer for nematodes
+                HTML(paste("<h4><ul> <li>Suggest using the mt 16S rRNA or COII gene as an alternative genetic marker</li>
+                                <li>	Refer to the suggested PCR primer list for the 16S primer for nematodes</li></ul>
                            </h4>"))
               }else if (values$group == "NT"){
-                paste(h4(".	Suggest using the mt 12S rRNA gene as an alternative genetic marker
-                          .	Refer to the suggested PCR primer list for the 12S primer for nematodes
-                        "))
+                HTML(paste("<h4><ul><li>Suggest using the mt 12S rRNA gene as an alternative genetic marker</li>
+                          <li>Refer to the suggested PCR primer list for the 12S primer for nematodes</li></ul>
+                          </h4>"))
               }else if (values$group == "TR"){
-                HTML(paste("<h4>.	Suggest using the mt 16S rRNA gene as an alternative genetic marker
-                                .	Refer to the suggested PCR primer list for the 16S primer for platyhelminths
-                            </h4>"))      
+                HTML(paste("<h4><ul><li>Suggest using the mt 16S rRNA gene as an alternative genetic marker</li>
+                                <li>Refer to the suggested PCR primer list for the 16S primer for platyhelminths</li>
+                            </h4>"))
               }else if (values$group == "CE"){
-                paste(h4(".	Suggest using the mt 12S rRNA gene as an alternative genetic marker
-                          .	Refer to the suggested PCR primer list for the 12S primer for platyhelminths
+                HTML(paste("<h4><ul><li>Suggest using the mt 12S rRNA gene as an alternative genetic marker</li>
+                          <li>Refer to the suggested PCR primer list for the 12S primer for platyhelminths</li><ul></h4>
                         "))
               }
             }else if(values$distanceBetween == "Family-Genus"){
               if(values$group == "NAS" ){
-                paste(h4(".	Suggest using the mt 12S rRNA gene as an alternative genetic marker
-                          .	Refer to the suggested PCR primer list for the 12S primer for nematodes
+                HTML(paste("<h4><ul><li>Suggest using the mt 12S rRNA gene as an alternative genetic marker</li>
+                          <li>Refer to the suggested PCR primer list for the 12S primer for nematodes</li></ul></h4>
                          "))
               }else if (values$group == "NS"){
-                HTML(paste("<h4>.	Suggest using the mt COI, 12S, or 16S rRNA gene as an alternative genetic marker
-                                .	Refer to the suggested PCR primer list
+                HTML(paste("<h4><ul><li>Suggest using the mt COI, 12S, or 16S rRNA gene as an alternative genetic marker</li>
+                                <li>Refer to the suggested PCR primer list</li></ul>
                             </h4>"))
               }else if (values$group == "NT"){
                 paste(h2("They are between in", values$distanceBetween))
               }else if (values$group == "TR"){
-                HTML(paste("<h4>.	Suggest using the nuclear 28S rRNA gene as an alternative genetic marker
-                                .	Refer to the suggested PCR primer list for the 28S primer for platyhelminths
+                HTML(paste("<h4><ul><li>Suggest using the nuclear 28S rRNA gene as an alternative genetic marker</li>
+                                <li>Refer to the suggested PCR primer list for the 28S primer for platyhelminths</li></ul>
                             </h4>"))
               }else if (values$group == "CE"){
-                paste(h4(".	Suggest using the mt 16S rRNA or COI gene as an alternative genetic marker
-                          .	Refer to the suggested PCR primer list
-                          "))
+                HTML(paste("<h4><ul><li>Suggest using the mt 16S rRNA or COI gene as an alternative genetic marker</li>
+                          <li>Refer to the suggested PCR primer list</li></ul>
+                          </h4>"))
               }
             }else if(values$distanceBetween == "Order-Family"){
               paste(h2("They are between in", values$distanceBetween))
