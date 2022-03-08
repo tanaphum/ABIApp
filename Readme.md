@@ -20,7 +20,7 @@ install_github("slphyx/ABI")
 ## Use Package
 
 ```{r}
-Abby::run_app_ABI()
+ABI::run_app_ABI()
 ```
 
 or
