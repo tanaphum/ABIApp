@@ -9,11 +9,12 @@ ABI_Helminth(distance = 0, group = "NAS", marker = "18S rRNA")
 \arguments{
 \item{distance}{Number >= 0 (Number should be 0.000 - 0.735)}
 
-\item{group}{group of Helminth ("NAS","NS","NT","TR","CE")
+\item{group}{group of Helminth ("NAS","NS","NT","TR","TRD","CE")
 "NAS" is "Nematode (Ascaridida and Spirurida)"
 "NS"  is "Nematode (Strongylida)")
 "NT"  is "Nematode (Trichocephalida)"
-"TR"  is "Trematode"
+"TR"  is "Trematode (Plagiorchiida)"
+"TRD" is "Trematode (Diplostomida)"
 "CE"  is "Cestode"}
 
 \item{marker}{Helminth Genetic Markers
@@ -24,4 +25,15 @@ Plot of ggplot
 }
 \description{
 A tool for helminth species delimitation at various taxonomic levels
+}
+\examples{
+ABI_Helminth()
+ABI_Helminth(0.06)
+ABI_Helminth(0.02,"NS","18S rRNA")
+ABI_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
+
+Warning! Some groups do not some markers
+plot will show Noting
+ABI_Helminth(0.02,"CE","28S rRNA")
+
 }
