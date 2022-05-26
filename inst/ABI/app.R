@@ -1,7 +1,7 @@
 
 ##### ABIyApp  by slphyx
 
-app_version <- "V0.2"
+app_version <- "V0.3"
 
 
 library(shiny)
@@ -99,8 +99,10 @@ Convert.group <- function(group){
         return("NS")
     if(group == "Nematode (Trichocephalida)")
         return("NT")
-    if(group == "Trematode")
+    if(group == "Trematode (Plagiorchiida)")
         return("TR")
+    if(group == "Trematode (Diplostomida)")
+        return("TRD")
     if(group == "Cestode")
         return("CE")
 }
@@ -111,7 +113,8 @@ Load.data <- function(group){
                    NAS = read.csv('./data/nematode1.csv'),
                    NS = read.csv('./data/nematode2.csv'),
                    NT = read.csv('./data/nematode3.csv'),
-                   TR = read.csv('./data/trematode.csv'),
+                   TR = read.csv('./data/trematode1.csv'),
+                   TRD = read.csv('./data/trematode2.csv'),
                    CE = read.csv('./data/cestode.csv'))
     return(data)
 }
@@ -263,13 +266,14 @@ ui <- fluidPage(
                                  min = 0,max = 1, step = 0.001, value = 0)
                 ),
                 column(4,
-                    selectInput(inputId = 'group', label = "Helminth group :",
-                       choices = c("Nematode (Ascaridida and Spirurida)",
-                                   "Nematode (Strongylida)",
-                                   "Nematode (Trichocephalida)",
-                                   "Trematode",
-                                   "Cestode")
-                    )
+                       selectInput(inputId = 'group', label = "Please choose your helminth group",
+                                   choices = c("Nematode (Ascaridida and Spirurida)",
+                                               "Nematode (Strongylida)",
+                                               "Nematode (Trichocephalida)",
+                                               "Trematode (Plagiorchiida)",
+                                               "Trematode (Diplostomida)",
+                                               "Cestode")
+                       ),
                 ),
                 column(4,
                     uiOutput('geninput.marker')
