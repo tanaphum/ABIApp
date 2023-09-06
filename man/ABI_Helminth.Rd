@@ -25,3 +25,37 @@ Plot of ggplot
 \description{
 A tool for helminth species delimitation at various taxonomic levels
 }
+\examples{
+ABI_Helminth()
+ABI_Helminth(0.06)
+ABI_Helminth(0.02,"NS","18S rRNA")
+ABI_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
+
+##### Fasta file #####
+library(ape)
+sequences <- read.dna("file.fasta",format = "fasta")
+# Convert sequences to distance matrix
+dist_matrix <- dist.dna(sequences, model = "raw")
+
+# Construct neighbor-joining tree
+nj_tree <- nj(dist_matrix)
+genetic_distance <- cophenetic(nj_tree)
+
+# set column and row name
+colM <- colnames(genetic_distance)
+rowM <- rownames(genetic_distance)
+
+# select taxa
+distance_selected  <- genetic_distance[rowM[1],colM[2]]
+# Use ABI_Helminth()
+ABI_Helminth(distance = distance_selected,
+group = "CE",marker = "ITS2")
+
+#############################################
+
+Warning!Some groups don\'t some markers
+plot will show Noting
+#ABI_Helminth(0.1,"NAS","28S rRNA")
+
+
+}
