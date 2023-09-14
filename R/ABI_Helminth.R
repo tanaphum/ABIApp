@@ -1,12 +1,13 @@
 #' A tool for helminth species delimitation at various taxonomic levels
 #'
 #' @param distance Number >= 0 (Number should be 0.000 - 0.735)
-#' @param group group of Helminth ("NAS","NS","NT","TR","CE")
-#' "NAS" is "Nematode (Ascaridida and Spirurida)"
-#' "NS"  is "Nematode (Strongylida)")
-#' "NT"  is "Nematode (Trichocephalida)"
-#' "TR"  is "Trematode"
-#' "CE"  is "Cestode"
+#' @param group group of Helminth ("NAS","NS","NT","TR","TRD","CE") \cr
+#' "NAS" is "Nematode (Ascaridida and Spirurida)" \cr
+#' "NS"  is "Nematode (Strongylida)" \cr
+#' "NT"  is "Nematode (Trichocephalida)" \cr
+#' "TR"  is "Trematode (Plagiorchiida)" \cr
+#' "TRD"  is "Trematode (Diplostomida)" \cr
+#' "CE"  is "Cestode" \cr
 #' @param marker Helminth Genetic Markers
 #' ("18S rRNA","28S rRNA","ITS1","ITS2","COI","COII","cytB","NAD1","12S rRNA","16S rRNA")
 #' @return
@@ -95,10 +96,11 @@ MinMax <- function(level, marker, data){
 Load.data <- function(group){
   dir <- system.file(package='ABI')
   data <- switch(group,
-                 NAS = read.csv(paste0(dir,'/ABI/data/nematode1.csv')),
-                 NS = read.csv(paste0(dir,'/ABI/data/nematode2.csv')),
-                 NT = read.csv(paste0(dir,'/ABI/data/nematode3.csv')),
-                 TR = read.csv(paste0(dir,'/ABI/data/trematode.csv')),
+                 NT = read.csv(paste0(dir,'/ABI/data/nematode1.csv')),
+                 NAS = read.csv(paste0(dir,'/ABI/data/nematode2.csv')),
+                 NS = read.csv(paste0(dir,'/ABI/data/nematode3.csv')),
+                 TR = read.csv(paste0(dir,'/ABI/data/trematode1.csv')),
+                 TRD = read.csv(paste0(dir,'/ABI/data/trematode2.csv')),
                  CE = read.csv(paste0(dir,'/ABI/data/cestode.csv')))
   return(data)
 }

@@ -9,12 +9,13 @@ ABI_Helminth(distance = 0, group = "NAS", marker = "18S rRNA")
 \arguments{
 \item{distance}{Number >= 0 (Number should be 0.000 - 0.735)}
 
-\item{group}{group of Helminth ("NAS","NS","NT","TR","CE")
-"NAS" is "Nematode (Ascaridida and Spirurida)"
-"NS"  is "Nematode (Strongylida)")
-"NT"  is "Nematode (Trichocephalida)"
-"TR"  is "Trematode"
-"CE"  is "Cestode"}
+\item{group}{group of Helminth ("NAS","NS","NT","TR","TRD","CE") \cr
+"NAS" is "Nematode (Ascaridida and Spirurida)" \cr
+"NS"  is "Nematode (Strongylida)" \cr
+"NT"  is "Nematode (Trichocephalida)" \cr
+"TR"  is "Trematode (Plagiorchiida)" \cr
+"TRD"  is "Trematode (Diplostomida)" \cr
+"CE"  is "Cestode" \cr}
 
 \item{marker}{Helminth Genetic Markers
 ("18S rRNA","28S rRNA","ITS1","ITS2","COI","COII","cytB","NAD1","12S rRNA","16S rRNA")}
