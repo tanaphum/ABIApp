@@ -348,6 +348,7 @@ server <- function(input, output,session) {
     values <- reactiveValues()
     values$distance <- NULL
     values$heighttree <- "400px"
+    values$heighttree_circle <- "800px"
     values$displayTable <- F
     values$language <- "EN"
     
@@ -438,6 +439,7 @@ server <- function(input, output,session) {
       if(length(values$genetic_distance[1,]) > 16){
         h <- length(values$genetic_distance[1,])*25
         values$heighttree <- paste0(h,"px")
+        values$heighttree_circle <- paste0(h*2,"px")
       }
       # set column and row name from genetic_distance
       colname_genetic <- colnames(values$genetic_distance)
@@ -488,6 +490,7 @@ server <- function(input, output,session) {
     
     output$treeOutput <- renderUI({
       req(!is.null(input$fastaFile))
+      if(is.null(input$treelayout)){
       tagList(
       fluidRow(
 
@@ -504,9 +507,50 @@ server <- function(input, output,session) {
              ),
       ),
 
-      ),
-      plotOutput('treeplot',width = "80%",height =values$heighttree)
       )
+      )
+      }else if(input$treelayout=="circular"){
+
+        tagList(
+          fluidRow(
+            
+            column(3,offset = 1,
+                   checkboxInput("branch_length","branch length scaling",value = input$branch_length)
+            ),
+            column(8,
+                   selectInput("treelayout", "Layout of tree :",
+                               c("rectangular" = "rectangular",
+                                 "slanted" = "slanted",
+                                 "circular" = "circular"
+                               ),
+                               selected = "circular"
+                   ),
+            ),
+            
+          ),
+          plotOutput('treeplot',width = "100%",height =values$heighttree_circle)
+        )
+      }else{
+        tagList(
+          fluidRow(
+            
+            column(3,offset = 1,
+                   checkboxInput("branch_length","branch length scaling",value = input$branch_length)
+            ),
+            column(8,
+                   selectInput("treelayout", "Layout of tree :",
+                               c("rectangular" = "rectangular",
+                                 "slanted" = "slanted",
+                                 "circular" = "circular"
+                               ),
+                               selected = input$treelayout
+                   ),
+            ),
+            
+          ),
+          plotOutput('treeplot',width = "80%",height =values$heighttree)
+        )
+      }
     })
     
     observeEvent(input$tabs,{
