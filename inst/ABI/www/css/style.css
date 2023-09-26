@@ -6,9 +6,6 @@
 input[type=checkbox] {
   transform: scale(1.5);
 }
-img#flag{
-  border: 0px;
-}
 
 body{
   font-family: Arial, Helvetica, sans-serif;
@@ -47,6 +44,9 @@ img{
 
 
 }
+div#ABIApp{
+  text-align: center;
+}
 
 #ABIApp{
     width: 600px;
@@ -54,6 +54,7 @@ img{
   display: block;  
 margin-left: auto;  
 margin-right: auto;  
+
 }
 #about{
   width: 80%;
@@ -71,7 +72,14 @@ img[alt=Exdasta1],img[alt=Exdasta2],img[alt=picture],img[alt=picture_fasta]
   p,li,ol ,ul,a,label,input,div,span,.input-group,.btn  {
     font-size: 1.5vw;
   }
-
+  #ABIApp {
+    width: 60vw;
+    height: 60vh;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3vh;
+  }
   h1{
     font-size: 3vw;
   }
@@ -85,9 +93,10 @@ img[alt=Exdasta1],img[alt=Exdasta2],img[alt=picture],img[alt=picture_fasta]
     font-size: 1.75vw;
   }
   img#flag{
-    width: 4vw;
-    height: 6vh;
-  }
+  border: 0px;
+  width: 4vw;
+  height: 6vh;
+}
 .form-control{
   height: 5.5vh;
   font-size: 2.5vh;

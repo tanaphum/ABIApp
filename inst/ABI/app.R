@@ -228,7 +228,7 @@ ui <- fluidPage(
             # includeMarkdown("./www/text/about.md"),
             # tags$img(id="Diagram",src="./img/Abi_Diagram.png" ,alt="Abi Diagram")
             includeCSS("./www/css/style.css"),
-            div(
+            div(id="ABIApp",
               tags$img(id="ABIApp",src="./img/ABI_app.png" ,alt="ABI App"),
               tags$hr()
             ),
