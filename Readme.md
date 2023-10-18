@@ -1,11 +1,22 @@
 ![image](https://img.shields.io/badge/Code-R-blue)
 ![image](https://img.shields.io/badge/Package-R-blue)
 ![image](https://img.shields.io/badge/ABI-V%200.3-blue)
+
+## Pre-Install Package
+this package require "ggtree" (https://bioconductor.org/packages/release/bioc/html/ggtree.html) on the web app \
+you must install ggtree packages before install ABI packages
+```{r}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("ggtree")
+```
+
 ## Install Package
 
 ```{r}
 install.packages("devtools")
-devtools::install_github("slphyx/ABI")
+devtools::install_github("slphyx/ABIApp")
 ```
 
 or
@@ -13,7 +24,7 @@ or
 ```{r}
 install.packages("devtools")
 library(devtools)
-install_github("slphyx/ABI")
+install_github("slphyx/ABIApp")
 ```
 
 
