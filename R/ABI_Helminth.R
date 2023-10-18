@@ -19,20 +19,26 @@
 #' ABI_Helminth(0.06)
 #' ABI_Helminth(0.02,"NS","18S rRNA")
 #' ABI_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
+#' 
+#' ##### Fasta file #####
+#' library(ape)
+#' sequences <- read.dna("file.fasta",format = "fasta")
+#' # Convert sequences to distance matrix
+#' dist_matrix <- dist.dna(sequences, model = "raw")
 #'
 #' Warning! Some groups do not some markers
 #' plot will show Noting
 #' ABI_Helminth(0.02,"CE","28S rRNA")
 #'
+#' 
 #' @import ggplot2 stringr utils
-
+# 
 ABI_Helminth <- function(distance=0, group = "NAS",marker="18S rRNA"){
   data <- Load.data(group = group)
   ranges <- Level.Available(data = data, marker = marker, level.out = TRUE)
   distanceBetween <- Check.distance.between(group=group,distance=distance,marker=marker)
   ABI_warning(distance = distance,group = group, marker = marker,distanceBetween=distanceBetween)
   ShowRanges(ranges = ranges,group = group,distance = distance, marker = marker)
-
 }
 
 # min/max columns
@@ -75,6 +81,7 @@ MinMax <- function(level, marker, data){
 Load.data <- function(group){
   dir <- system.file(package='ABI')
   data <- switch(group,
+
                  NAS = read.csv(paste0(dir,'/ABI/data/nematode1.csv')),
                  NS = read.csv(paste0(dir,'/ABI/data/nematode2.csv')),
                  NT = read.csv(paste0(dir,'/ABI/data/nematode3.csv')),

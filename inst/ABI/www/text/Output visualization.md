@@ -1,4 +1,5 @@
 ####  Output visualization: 
+
 ##### Example 1 (0.15 genetic distance, trematode, COI gene) 
 
 ![Ex1](ex1.png "Example 1")
