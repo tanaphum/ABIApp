@@ -1,26 +1,28 @@
 #' A tool for helminth species delimitation at various taxonomic levels
 #'
 #' @param distance Number >= 0 (Number should be 0.000 - 0.735)
-#' @param group group of Helminth ("NAS","NS","NT","TR","CE")
+#' @param group group of Helminth ("NAS","NS","NT","TR","TRD","CE")
 #' "NAS" is "Nematode (Ascaridida and Spirurida)"
 #' "NS"  is "Nematode (Strongylida)")
 #' "NT"  is "Nematode (Trichocephalida)"
-#' "TR"  is "Trematode"
+#' "TR"  is "Trematode (Plagiorchiida)"
+#' "TRD" is "Trematode (Diplostomida)"
 #' "CE"  is "Cestode"
 #' @param marker Helminth Genetic Markers
 #' ("18S rRNA","28S rRNA","ITS1","ITS2","COI","COII","cytB","NAD1","12S rRNA","16S rRNA")
 #' @return
 #' Plot of ggplot
 #' @export ABI_Helminth
+#'
 #' @examples
 #' ABI_Helminth()
 #' ABI_Helminth(0.06)
 #' ABI_Helminth(0.02,"NS","18S rRNA")
 #' ABI_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
 #'
-#' Warning!Some groups don't some markers
+#' Warning! Some groups do not some markers
 #' plot will show Noting
-#' #ABI_Helminth(0.02,"CE","28S rRNA")
+#' ABI_Helminth(0.02,"CE","28S rRNA")
 #'
 #' @import ggplot2 stringr utils
 
@@ -76,7 +78,8 @@ Load.data <- function(group){
                  NAS = read.csv(paste0(dir,'/ABI/data/nematode1.csv')),
                  NS = read.csv(paste0(dir,'/ABI/data/nematode2.csv')),
                  NT = read.csv(paste0(dir,'/ABI/data/nematode3.csv')),
-                 TR = read.csv(paste0(dir,'/ABI/data/trematode.csv')),
+                 TR = read.csv(paste0(dir,'/ABI/data/trematode1.csv')),
+                 TRD = read.csv(paste0(dir,'/ABI/data/trematode2.csv')),
                  CE = read.csv(paste0(dir,'/ABI/data/cestode.csv')))
   return(data)
 }

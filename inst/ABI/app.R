@@ -369,6 +369,10 @@ server <- function(input, output) {
 
     })
 
+    observeEvent(input$marker,{
+      values$displayTable <- F
+    })
+
     observeEvent(input$submit,{
 
         # values$level <- input$level
