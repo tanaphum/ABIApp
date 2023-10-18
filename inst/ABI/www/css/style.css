@@ -1,11 +1,52 @@
 #AbbyText h4,h3,h2{
-    color: red;
+    color: red;!important
     border: solid;
     padding: 15px;
 }
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+}
+#dtext{
+  border: 2px solid red;
+  padding: 5px 0px 7.5px 15px;
+}
+.navbar-default .navbar-nav>li>a {
+    color: #204070;
+}
+
+table,td,th {
+  border: 1px solid #bbb;
+  padding: 8px;
+}
+
+th{
+  background-color: #ddefff;
+}
+
+
+
+tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
+
 #Diagram{
   width: 95%;
   height: 95%;
+}
+
+img{
+  border: 2px solid;
+}
+
+
+}
+div#ABIApp{
+  text-align: center;
 }
 
 #ABIApp{
@@ -14,14 +55,145 @@
   display: block;  
 margin-left: auto;  
 margin-right: auto;  
+
 }
 #about{
-    width: 80%;
+  width: 80%;
   height: 80%;
   margin-left: auto;
   margin-right: auto;
 }
-img[alt=picture] { 
-  width: 900px; 
-  height: 135px;
+img[alt=Exdasta1],img[alt=Exdasta2],img[alt=picture],img[alt=picture_fasta]
+,img[alt=Ex1],img[alt=Ex2],img[alt=Ex3]{ 
+  width: 90%; !important
+  height: 90%; !important
 }
+
+@media screen and (min-width: 1201px) {
+  p,li,ol ,ul,a,label,input,div,span,.input-group,.btn  {
+    font-size: 1.5vw;
+  }
+  #ABIApp {
+    width: 60vw;
+    height: 60vh;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3vh;
+  }
+  h1{
+    font-size: 3vw;
+  }
+  h2{
+    font-size: 2.75vw;
+  }
+  h3{
+    font-size: 2.5vw;
+  }
+  h4,h5,.panel-title{
+    font-size: 1.75vw;
+  }
+  img#flag{
+  border: 0px;
+  width: 4vw;
+  height: 6vh;
+}
+.form-control{
+  height: 5.5vh;
+  font-size: 2.5vh;
+}
+    .navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+    margin-left: -15px;
+    font-size: 2vw;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:first-child>.btn-group:not(:first-child)>.btn, .input-group-btn:first-child>.btn:not(:first-child), .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group>.btn, .input-group-btn:last-child>.dropdown-toggle {
+    padding: 23px;
+    font-size: 1.5vw;
+}
+ul.nav.navbar-nav{
+  margin-top: 1.5vh;
+  margin-bottom: 1vh;
+}
+.navbar .navbar-nav>li>a  {
+    color: #4582ec;
+    background-color: transparent;
+    padding: 1vh 1vw 1vh 1vw;
+    font-size: 1.5vw;
+}
+.nav-tabs>li>a {
+    padding: 1vh 1vw 1vh 1vw;
+    font-size: 1.25vw;
+}
+}
+
+div#treeplot {
+    margin: auto;
+}
+
+@media screen and (min-width: 1601px) {
+  .input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:first-child>.btn-group:not(:first-child)>.btn, .input-group-btn:first-child>.btn:not(:first-child), .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group>.btn, .input-group-btn:last-child>.dropdown-toggle {
+    padding: 28px;
+    font-size: 1.5vw;
+}
+
+}
+
+
+
+
+@media (min-aspect-ratio: 21/9),(min-width: 1920px) {
+  .input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:first-child>.btn-group:not(:first-child)>.btn, .input-group-btn:first-child>.btn:not(:first-child), .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group>.btn, .input-group-btn:last-child>.dropdown-toggle {
+    padding: 35px;
+    font-size: 1.5vw;
+    width: 30vw
+}
+.selectize-input{
+  height: 6vh;
+}
+.selectize-input .items .full .has-options .has-items{
+  margin-top: 1.5vh;
+  margin-left: 1.5vh;
+}
+div .item{
+  margin-top: 1.5vh;
+  margin-left: 1.5vh;
+}
+input[type='checkbox']{
+        width: 3vh; /*Desired width*/
+        height: 3vh; /*Desired height*/
+}
+
+.radio input[type="radio"], .radio-inline input[type="radio"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+    position: absolute;
+    margin-left: -55px;
+    margin-top: 2vh;
+}
+div.selectize-dropdown {
+  line-height: 4vh;!important
+}
+ul.nav.navbar-nav{
+  margin-top: 2vh;
+  margin-bottom: 1.5vh;
+}
+.navbar .navbar-nav>li>a  {
+    color: #4582ec;
+    background-color: transparent;
+    padding: 2vh 2vw 2vh 2vw;
+    font-size: 1.5vw;
+}
+.nav-tabs>li>a {
+    padding: 2vh 2vw 2vh 2vw;  
+    font-size: 1.5vw;
+}
+.form-control{
+  height: 6vh;
+  font-size: 3.5vh;
+}
+div#fastaFile_progress{
+      width: 37vw;
+}
+}
+
+

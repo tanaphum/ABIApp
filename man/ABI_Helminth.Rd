@@ -9,13 +9,13 @@ ABI_Helminth(distance = 0, group = "NAS", marker = "18S rRNA")
 \arguments{
 \item{distance}{Number >= 0 (Number should be 0.000 - 0.735)}
 
-\item{group}{group of Helminth ("NAS","NS","NT","TR","TRD","CE")
-"NAS" is "Nematode (Ascaridida and Spirurida)"
-"NS"  is "Nematode (Strongylida)")
-"NT"  is "Nematode (Trichocephalida)"
-"TR"  is "Trematode (Plagiorchiida)"
-"TRD" is "Trematode (Diplostomida)"
-"CE"  is "Cestode"}
+\item{group}{group of Helminth ("NAS","NS","NT","TR","TRD","CE") \cr
+"NAS" is "Nematode (Ascaridida and Spirurida)" \cr
+"NS"  is "Nematode (Strongylida)" \cr
+"NT"  is "Nematode (Trichocephalida)" \cr
+"TR"  is "Trematode (Plagiorchiida)" \cr
+"TRD"  is "Trematode (Diplostomida)" \cr
+"CE"  is "Cestode" \cr}
 
 \item{marker}{Helminth Genetic Markers
 ("18S rRNA","28S rRNA","ITS1","ITS2","COI","COII","cytB","NAD1","12S rRNA","16S rRNA")}
@@ -32,8 +32,31 @@ ABI_Helminth(0.06)
 ABI_Helminth(0.02,"NS","18S rRNA")
 ABI_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
 
-Warning! Some groups do not some markers
+##### Fasta file #####
+library(ape)
+sequences <- read.dna("file.fasta",format = "fasta")
+# Convert sequences to distance matrix
+dist_matrix <- dist.dna(sequences, model = "raw")
+
+# Construct neighbor-joining tree
+nj_tree <- nj(dist_matrix)
+genetic_distance <- cophenetic(nj_tree)
+
+# set column and row name
+colM <- colnames(genetic_distance)
+rowM <- rownames(genetic_distance)
+
+# select taxa
+distance_selected  <- genetic_distance[rowM[1],colM[2]]
+# Use ABI_Helminth()
+ABI_Helminth(distance = distance_selected,
+group = "CE",marker = "ITS2")
+
+#############################################
+
+Warning!Some groups don\'t some markers
 plot will show Noting
-ABI_Helminth(0.02,"CE","28S rRNA")
+#ABI_Helminth(0.1,"NT","28S rRNA")
+
 
 }

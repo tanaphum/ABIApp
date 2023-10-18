@@ -12,8 +12,9 @@ library(htmltools)
 library(markdown)
 library(shinyWidgets)
 library(bsplus)
-
-
+library(seqinr)
+library(ape)
+library(ggtree)
 
 flag.choose <- function(language) {
   switch(language,
@@ -34,6 +35,7 @@ col.order <- c(3,4)
 col.family <- c(7,8)
 col.genus <- c(11,12)
 col.species <- c(15,16)
+
 
 
 ## get the list of markers
@@ -110,9 +112,9 @@ Convert.group <- function(group){
 ### load data
 Load.data <- function(group){
     data <- switch(group,
-                   NAS = read.csv('./data/nematode1.csv'),
-                   NS = read.csv('./data/nematode2.csv'),
-                   NT = read.csv('./data/nematode3.csv'),
+                   NT = read.csv('./data/nematode1.csv'),
+                   NAS = read.csv('./data/nematode2.csv'),
+                   NS = read.csv('./data/nematode3.csv'),
                    TR = read.csv('./data/trematode1.csv'),
                    TRD = read.csv('./data/trematode2.csv'),
                    CE = read.csv('./data/cestode.csv'))
@@ -215,7 +217,9 @@ ShowRanges <- function(ranges, distance=NULL, group = NULL,marker=NULL){
 #     )
 # )
 
+
 ui <- fluidPage(
+  
     title = "ABI App",
     theme = shinytheme("readable"),
 
@@ -224,7 +228,7 @@ ui <- fluidPage(
             # includeMarkdown("./www/text/about.md"),
             # tags$img(id="Diagram",src="./img/Abi_Diagram.png" ,alt="Abi Diagram")
             includeCSS("./www/css/style.css"),
-            div(
+            div(id="ABIApp",
               tags$img(id="ABIApp",src="./img/ABI_app.png" ,alt="ABI App"),
               tags$hr()
             ),
@@ -251,51 +255,87 @@ ui <- fluidPage(
                             uiOutput("inputData")
                             ),
                    tabPanel("Output visualization",
-                            uiOutput("outputVisualization")
+                            tabsetPanel(
+                              tabPanel("Fasta file",
+                                uiOutput("outputVisualization_fasta")
+                              ),
+                              tabPanel("Genetic distance",
+                                uiOutput("outputVisualization")
+                              )
+                            )
+
                             ),
                    tabPanel("Suggested primers",
                             uiOutput("suggestedPrimers"),
-                              a("Suggested PCR primers for ABIapp",target="_blank",href="pdf/Suggested_PCR_primers_for_ABIapp.pdf")
+                              tags$a("Suggested PCR primers for ABIapp",target="_blank",href="pdf/Suggested_PCR_primers_for_ABIapp.pdf")
                             )
                  )
         ),
         tabPanel("Application",
-            fluidRow(
-                column(4,
-                    numericInput(inputId = 'distance', label = "Genetic distance between taxa of interest (p-distance:0-1):",
-                                 min = 0,max = 1, step = 0.001, value = 0)
-                ),
-                column(4,
-                       selectInput(inputId = 'group', label = "Please choose your helminth group",
-                                   choices = c("Nematode (Ascaridida and Spirurida)",
-                                               "Nematode (Strongylida)",
-                                               "Nematode (Trichocephalida)",
-                                               "Trematode (Plagiorchiida)",
-                                               "Trematode (Diplostomida)",
-                                               "Cestode")
+            fluidRow(  
+              tabsetPanel(id = "tabs",
+              # tab Fasta file
+              tabPanel("Fasta file", 
+                       value = 1,
+                       tags$br(),
+                       column(12,
+                       fileInput("fastaFile", 
+                       "Upload File :"
+                       ,width = "500px"
+                       , accept = ".fasta"),
                        ),
-                ),
-                column(4,
-                    uiOutput('geninput.marker')
-                ),
+                       column(5,
+                              selectizeInput("fastaSelect1", 
+                                             "Sequence ID of queried sequence(ID name should match name in fasta file):", 
+                                             choices=c(),
+                                             width = "100%"),
+                       ),
+                       column(5,
+                              selectizeInput("fastaSelect2", 
+                                             "Sequence ID of sequence to be compared with(ID name should match name in fasta file):", 
+                                             choices=c(),
+                                             width = "100%")
+                       ),
+                       column(2,
+                            uiOutput('distanceText')
+                       ),
+                       ),#end Fasta file tab
+              tabPanel("Genetic distance",
+                       value = 2,
+                       tags$br(),
+                       column(4,
+                              numericInput(inputId = 'distance', label = "Genetic distance between taxa of interest (p-distance:0-1):",
+                                           min = 0,max = 1,width = "100%", step = 0.001, value = 0),
+
+                       ),
+              ),#end Genetic distance tab
+              ),#end tab set
+              column(12),
+                       column(4,
+                              selectInput(inputId = 'group', label = "Please choose your helminth group",
+                                          choices = c("Nematode (Trichocephalida)",
+                                                      "Nematode (Ascaridida and Spirurida)",
+                                                      "Nematode (Strongylida)",
+                                                      "Trematode (Plagiorchiida)",
+                                                      "Trematode (Diplostomida)",
+                                                      "Cestode"),
+                                          width = "100%"
+                              ),
+                       ),
+                       column(4,
+                              uiOutput('geninput.marker')
+                       ),
+              column(12),
+                       column(4,
+                              actionButton('submit',"Go!"),
+                              ),
+              column(8,
+                     tableOutput('tbl'),
+                     )
             ),
-            actionButton('submit',"Go!"),
+
             hr(),
-            fluidRow(
-
-
-                        column(8,
-                            plotOutput('distplot')
-                        ),
-                        column(4,
-                            htmlOutput('AbbyText')
-                        ),
-                        tableOutput('tbl')
-
-
-
-            )
-
+            uiOutput("tabsOutput"),
         )
 
     )
@@ -303,11 +343,15 @@ ui <- fluidPage(
 )
 
 
-server <- function(input, output) {
+server <- function(input, output,session) {
 
     values <- reactiveValues()
+    values$distance <- NULL
+    values$heighttree <- "400px"
+    values$heighttree_circle <- "800px"
     values$displayTable <- F
     values$language <- "EN"
+    
 
     output$geninput.marker <- renderUI({
 
@@ -318,13 +362,14 @@ server <- function(input, output) {
         values$displayTable <- F
 
         div(
-            selectInput('marker',label = "Genetic marker :", choices = values$marker.list, selected = NULL)
+            selectInput('marker',label = "Genetic marker :", choices = values$marker.list, selected = NULL,width = "100%")
         )
     })
 
 
     values$MD_Before <- "./www/text/Before you start.md"
     values$MD_InputData <- "./www/text/Input data.md"
+    values$MD_Visualization_fasta <-"./www/text/Output visualization_fasta.md"
     values$MD_Visualization <-"./www/text/Output visualization.md"
     values$MD_SuggestedPrimers <- "./www/text/Suggested primers.md"
 
@@ -334,6 +379,9 @@ server <- function(input, output) {
     })
     output$inputData <- renderUI({
       includeMarkdown(values$MD_InputData)
+    })
+    output$outputVisualization_fasta <- renderUI({
+      includeMarkdown(values$MD_Visualization_fasta)
     })
     output$outputVisualization <- renderUI({
       includeMarkdown(values$MD_Visualization)
@@ -362,24 +410,180 @@ server <- function(input, output) {
       values$MD_Visualization <- switch(values$language,
                                  "EN" = "./www/text/Output visualization_TH.md",
                                  "TH" = "./www/text/Output visualization.md")
+      values$MD_Visualization_fasta <- switch(values$language,
+                                        "EN" = "./www/text/Output visualization_fasta_TH.md",
+                                        "TH" = "./www/text/Output visualization_fasta.md")
       values$MD_SuggestedPrimers <- switch(values$language,
                                     "EN" = "./www/text/Suggested primers_TH.md",
                                     "TH" = "./www/text/Suggested primers.md")
       values$language <- changeLanguage(values$language)
 
     })
+    # read Fasta File
+    observeEvent(input$fastaFile,{
+      fastaFile <- input$fastaFile
+      sequences <- read.dna(fastaFile$datapath,
+                            format = "fasta")
+      
+      
+      # Convert sequences to distance matrix
+      dist_matrix <- dist.dna(sequences, model = "raw")
 
-    observeEvent(input$marker,{
-      values$displayTable <- F
+      # Construct neighbor-joining tree
+      values$dna_tree <- nj(dist_matrix)
+      
+      # Calculate genetic distance between each pair of sequences
+      values$genetic_distance <- cophenetic(values$dna_tree)
+      
+      # set height of tree plot
+      if(length(values$genetic_distance[1,]) > 16){
+        h <- length(values$genetic_distance[1,])*25
+        values$heighttree <- paste0(h,"px")
+        values$heighttree_circle <- paste0(h*2,"px")
+      }
+      # set column and row name from genetic_distance
+      colname_genetic <- colnames(values$genetic_distance)
+      rowname_genetic <- rownames(values$genetic_distance)
+      
+      # update Selectize fastaSelect1
+      updateSelectizeInput(session,
+                           "fastaSelect1", 
+                           "Sequence ID of queried sequence(ID name should match name in fasta file):", 
+                           choices=c(colname_genetic),
+
+                          )
+      
+      # update Selectize fastaSelect2
+      updateSelectizeInput(session,
+                           "fastaSelect2", 
+                           "Sequence ID of sequence to be compared with(ID name should match name in fasta file):", 
+                           choices=c(rowname_genetic),
+                           # select the last Sequence of FASTA
+                           selected = tail(rowname_genetic, 1)
+      )
+
     })
+    
+    # plot tree
+    output$treeplot <- renderPlot({
+      # input form select Sequence ID
+      taxon1 <- match(input$fastaSelect1,values$dna_tree$tip.label)
+      taxon2 <- match(input$fastaSelect2,values$dna_tree$tip.label)
+      # number of Characters 
+      num_char <- nchar(input$fastaSelect1)
+      # set branch.length in ggtree to none
+      branch_length <- "none"
+      # if checkbox is TRUE from checkboxInput "branch_length"
+      if(input$branch_length) branch_length <- "branch.length"
+      # plot ggtree
+      ggtree(values$dna_tree,layout=input$treelayout,branch.length=branch_length)+
+        # name of Sequence ID in FASTA file
+        geom_tiplab(size=5)+
+        # Highlight on Sequence ID which selected
+        geom_highlight(node=taxon1,alpha=0.3,fill="forestgreen",extend = num_char) +
+        geom_hilight(node=taxon2,alpha=0.3,fill="forestgreen", extend = num_char) +
+        # expand ratio in ggtree
+        hexpand(.35)+
+        # Pair Sequence ID which selected
+        geom_taxalink(input$fastaSelect1, input$fastaSelect2, color="orange2", curvature=-.9)
+    })
+    
+    output$treeOutput <- renderUI({
+      req(!is.null(input$fastaFile))
+      if(is.null(input$treelayout)){
+      tagList(
+      fluidRow(
 
-    observeEvent(input$submit,{
+      column(3,offset = 1,
+             checkboxInput("branch_length","branch length scaling")
+             ),
+      column(8,
+             selectInput("treelayout", "Layout of tree :",
+                         c("rectangular" = "rectangular",
+                           "slanted" = "slanted",
+                           "circular" = "circular"
+                         ),
+                         selected = "rectangular"
+             ),
+      ),
 
+      )
+      )
+      }else if(input$treelayout=="circular"){
+
+        tagList(
+          fluidRow(
+            
+            column(3,offset = 1,
+                   checkboxInput("branch_length","branch length scaling",value = input$branch_length)
+            ),
+            column(8,
+                   selectInput("treelayout", "Layout of tree :",
+                               c("rectangular" = "rectangular",
+                                 "slanted" = "slanted",
+                                 "circular" = "circular"
+                               ),
+                               selected = "circular"
+                   ),
+            ),
+            
+          ),
+          plotOutput('treeplot',width = "100%",height =values$heighttree_circle)
+        )
+      }else{
+        tagList(
+          fluidRow(
+            
+            column(3,offset = 1,
+                   checkboxInput("branch_length","branch length scaling",value = input$branch_length)
+            ),
+            column(8,
+                   selectInput("treelayout", "Layout of tree :",
+                               c("rectangular" = "rectangular",
+                                 "slanted" = "slanted",
+                                 "circular" = "circular"
+                               ),
+                               selected = input$treelayout
+                   ),
+            ),
+            
+          ),
+          plotOutput('treeplot',width = "80%",height =values$heighttree)
+        )
+      }
+    })
+    
+    observeEvent(input$tabs,{
+      values$displayTable <-F
+    })
+    
+    output$taxa <- renderText({
+      req(input$tabs == 1 && values$displayTable)
+      paste0("Based on a genetic distance of ", round(values$distance,3),
+             " between ",input$fastaSelect1, 
+             " and " , input$fastaSelect2)
+    })
+    
+    observeEvent(c(input$submit,input$fastaSelect1,
+                   input$fastaSelect2),{
+      if(input$tabs == 1 && !is.null(input$fastaFile)){
+        HTML(paste("<h4>Error
+                         </h4>"))
+      }
+        req((input$tabs == 1 && !is.null(input$fastaFile)) || input$tabs == 2)
         # values$level <- input$level
         values$displayTable <-T
-
-        values$distance <- input$distance
-
+        values$distance <- 0
+        values$distance_fasta_max <- 0
+        #Fasta file
+        if(input$tabs == 1){
+          col_Select <- input$fastaSelect1
+          row_Select <- input$fastaSelect2
+          values$distance <- values$genetic_distance[row_Select,col_Select]
+        }else{
+          # input distance
+          values$distance <- input$distance
+        }
         # values$abbyQ <- Check.distance.ranges(group = values$group, level = values$level,marker = values$marker, val = values$distance)
         values$ranges <- Level.Available(data = values$data, marker = input$marker, level.out = TRUE)
         values$distanceBetween <- Check.distance.between(group=values$group,distance=values$distance,marker=input$marker)
@@ -451,12 +655,9 @@ server <- function(input, output) {
             }else{
               paste(h2("They are different in", values$distanceBetween,"level."))
             }
-
         }
-
-
-
         })
+        
 
         output$distplot <- renderPlot({
           req(values$displayTable)
@@ -467,10 +668,76 @@ server <- function(input, output) {
 
 
     })
+    
+    output$distanceText <- renderUI({
+      #output will run if Fasta file is not NULL
+      req(!is.null(input$fastaFile))
+      distance <- NULL
+      # if values$distance is not NULL
+      # set distance = values$distance
+      if(!is.null(values$distance)) distance <- round(values$distance,3) 
+      tagList(
+        div(id="dtext",
+        p(h5("Distance between taxons:"), distance)
+        )
+      )
+    })
+    
+    output$tabsOutput <- renderUI({
 
+      if(input$tabs == 1){
+        req(!is.null(input$fastaFile))
+      tagList(
+        tabsetPanel(
+          tabPanel("Tree Plot",
+            uiOutput('treeOutput'),
+          ),
+          tabPanel("Distance Plot",
+            column(12,
+                   h4(textOutput("taxa")),
+                   fluidRow(
+                     column(8,
+                            plotOutput('distplot')
+                     ),
+                     column(4,
+                            htmlOutput('AbbyText')
+                     ),
+                   )
+            ),
+          ),
+
+        ),
+
+      )
+      }else{
+        tagList(
+          column(12,
+                 h4(textOutput("taxa")),
+                 fluidRow(
+                   column(8,
+                          plotOutput('distplot')
+                   ),
+                   column(4,
+                          htmlOutput('AbbyText')
+                   ),
+                 )
+          ),
+        )
+      }
+    })
+    
     output$tbl <- renderTable({
-      req(values$displayTable)
-      Marker.data(data = values$data, marker = input$marker, OutTable = TRUE)
+      req(input$marker)
+
+      x <- Marker.data(data = values$data, marker = input$marker, OutTable = TRUE)
+      x2 <- data.frame(
+        Taxonomic = c("Order Suborder" , "Family" , "Genus" ,"Species"),
+        Mean = unlist(x[,c(2,6,10,14)]),SD = unlist(x[,c(3,7,11,15)]),
+        Min = unlist(x[,c(4,8,12,16)]), Max = unlist(x[,c(5,9,13,17)])
+      )
+      colnames(x2) <- c(x[,1],"Mean","SD","Min","Max")
+      
+      x2
       })
 
 

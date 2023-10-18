@@ -5,7 +5,7 @@
 #' Open browser
 #' @export
 #'
-#' @import shiny shinythemes stringr ggplot2 markdown
+#' @import shiny shinythemes stringr ggplot2 DT markdown
 
 run_app_ABI <- function(options = list()) {
   app_dir <- system.file("ABI", package = "ABI")
