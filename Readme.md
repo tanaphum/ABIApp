@@ -3,8 +3,8 @@
 ![image](https://img.shields.io/badge/ABI-V%200.3-blue)
 
 ## Pre-Install Package
-this package require "ggtree" (https://bioconductor.org/packages/release/bioc/html/ggtree.html) on the web app \
-you must install ggtree packages before install ABI packages
+this package requires "ggtree" (https://bioconductor.org/packages/release/bioc/html/ggtree.html) on the web app \
+you must install ggtree package before install ABI packages
 ```{r}
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
