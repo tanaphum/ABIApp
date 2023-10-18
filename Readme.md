@@ -37,6 +37,7 @@ ABI_Helminth(0.06)
 ABI_Helminth(0.02,"NS","18S rRNA")
 ABI_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
 ```
+
 ### Use function With Fasta file
 ```{r}
 library(ape)
