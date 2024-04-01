@@ -327,6 +327,7 @@ ui <- fluidPage(
                               actionButton('submit',"Go!"),
                               ),
             ),
+            br(),
             tableOutput('tbl'),
             hr(),
             uiOutput("tabsOutput"),
@@ -678,7 +679,16 @@ server <- function(input, output,session) {
     })
     
     output$tbl <- renderTable({
-      Marker.data(data = values$data, marker = input$marker, OutTable = TRUE)
+
+      tmp <- Marker.data(data = values$data, marker = input$marker, OutTable = TRUE) |> unlist()
+      df <- data.frame(x=c("OrderSuborder","Family","Genus","Species"),
+                 Mean= c(tmp[2],tmp[6],tmp[10],tmp[14]),
+                 SD= c(tmp[3],tmp[7],tmp[11],tmp[15]),
+                 Min= c(tmp[4],tmp[8],tmp[12],tmp[16]),
+                 Max= c(tmp[5],tmp[9],tmp[13],tmp[17])
+                 ) 
+      names(df)[1] <- c(tmp[1])
+      df
       })
 
 
