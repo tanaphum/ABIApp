@@ -8,8 +8,8 @@ p,h1,h2,h3,h4,h5,h6,span,a {
 }
 
 #AbbyText h4,#AbbyText h3,#AbbyText h2,#AbbyText h1{
-    color: red;!important
-    border: solid;
+    color: red;
+    border: 2px solid !important;
     padding: 15px;
 }
 
