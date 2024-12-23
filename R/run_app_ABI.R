@@ -3,9 +3,10 @@
 #' @param options Named options that should be passed to the runApp call.
 #' @return
 #' Open browser
-#' @export
+#' @export run_app_ABI
 #'
-#' @import shiny shinythemes stringr ggplot2 markdown
+#' @examples
+#' run_app_ABI()
 
 run_app_ABI <- function(options = list()) {
   app_dir <- system.file("ABI", package = "ABI")

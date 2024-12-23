@@ -3,6 +3,12 @@
 
 app_version <- "V0.4"
 
+if(!require("ggtree", quietly = TRUE)){
+  if (!require("BiocManager", quietly = TRUE)){
+    install.packages("BiocManager")
+  }
+  BiocManager::install("ggtree")
+}
 
 library(shiny)
 library(shinythemes)
@@ -114,9 +120,9 @@ Convert.group <- function(group){
 ### load data
 Load.data <- function(group){
   data <- switch(group,
-                 NAS = read.csv('./data/nematode1.csv'),
-                 NS = read.csv('./data/nematode2.csv'),
-                 NT = read.csv('./data/nematode3.csv'),
+                 NT = read.csv('./data/nematode1.csv'),
+                 NAS = read.csv('./data/nematode2.csv'),
+                 NS = read.csv('./data/nematode3.csv'),
                  TR = read.csv('./data/trematode1.csv'),
                  TRD = read.csv('./data/trematode2.csv'),
                  CE = read.csv('./data/cestode.csv'))
@@ -332,9 +338,9 @@ ui <- dashboardPage(
                             column(12, numericInput("distance", "Genetic distance between taxa of interest (p-distance: 0-1):", min = 0, max = 1, step = 0.001, width = "100%", value = 0))
                             ),
                    column(12, selectInput("group", "Please choose your helminth group",
-                                         choices = c("Nematode (Ascaridida and Spirurida)",
+                                         choices = c("Nematode (Trichocephalida)",
+                                                     "Nematode (Ascaridida and Spirurida)",
                                                      "Nematode (Strongylida)",
-                                                     "Nematode (Trichocephalida)",
                                                      "Trematode (Plagiorchiida)",
                                                      "Trematode (Diplostomida)",
                                                      "Cestode"),
@@ -679,6 +685,8 @@ server <- function(input, output,session) {
                            HTML(paste("<h4><ul><li>Suggest using the mt 12S rRNA gene as an alternative genetic marker</li>
                           <li>Refer to the suggested PCR primer list for the 12S primer for platyhelminths</li><ul></h4>
                         "))
+                         }else{
+                           paste(h2("They are different in", values$distanceBetween,"level."))
                          }
                        }else if(values$distanceBetween == "Family-Genus"){
                          if(values$group == "NAS" ){
@@ -699,6 +707,8 @@ server <- function(input, output,session) {
                            HTML(paste("<h4><ul><li>Suggest using the mt 16S rRNA or COI gene as an alternative genetic marker</li>
                           <li>Refer to the suggested PCR primer list</li></ul>
                           </h4>"))
+                         }else{
+                           paste(h2("They are different in", values$distanceBetween,"level."))
                          }
                        }else if(values$distanceBetween == "Order-Family"){
                          paste(h2("They are between in", values$distanceBetween))
