@@ -1,14 +1,17 @@
 #' A tool for helminth species delimitation at various taxonomic levels
 #'
-#' @param distance Number >= 0 (Number should be 0.000 - 0.735)
-#' @param group group of Helminth ("NAS","NS","NT","TR","TRD","CE")
-#' "NAS" is "Nematode (Ascaridida and Spirurida)"
-#' "NS"  is "Nematode (Strongylida)")
-#' "NT"  is "Nematode (Trichocephalida)"
-#' "TR"  is "Trematode (Plagiorchiida)"
-#' "TRD" is "Trematode (Diplostomida)"
+#' @param distance Number >= 0 (From our database the number sh ould be 0.000 - 0.909)
+#' @param group group of Helminth ("NAS","NS","NT","TR","TRD","CE") /n
+#' "NAS" is "Nematode (Ascaridida and Spirurida)" /n
+#' "NS"  is "Nematode (Strongylida)") /n
+#' "NT"  is "Nematode (Trichocephalida)" /n
+#' "TR"  is "Trematode (Plagiorchiida)" /n
+#' "TRD" is "Trematode (Diplostomida)" /n
 #' "CE"  is "Cestode"
 #' @param marker Helminth Genetic Markers
+#' @param Fastafile directory of Fasta file
+#' @param fastaSelect1 Selection of 1st taxon from Fasta file (number or text(label))
+#' @param fastaSelect2 Selection of 2nd taxon from Fasta file (number or text(label))
 #' ("18S rRNA","28S rRNA","ITS1","ITS2","COI","COII","cytB","NAD1","12S rRNA","16S rRNA")
 #' @return
 #' Plot of ggplot
@@ -19,26 +22,62 @@
 #' ABI_Helminth(0.06)
 #' ABI_Helminth(0.02,"NS","18S rRNA")
 #' ABI_Helminth(distance = 0.5,group = "CE",marker = "ITS2")
-#' 
+#'
 #' ##### Fasta file #####
-#' library(ape)
-#' sequences <- read.dna("file.fasta",format = "fasta")
-#' # Convert sequences to distance matrix
-#' dist_matrix <- dist.dna(sequences, model = "raw")
+#' # Select with numbers
+#' ABI_Helminth(Fastafile="dir/fastaFile.fasta","NT","18S rRNA"
+#' fastaSelect1 = 1, fastaSelect2 = 2
+#' )
+#' # Select with number and text
+#' ABI_Helminth(Fastafile="dir/fastaFile.fasta","NT","18S rRNA"
+#' fastaSelect1 = "Label 1", fastaSelect2 = 2
+#' )
+#'# Select with texts
+#' ABI_Helminth(Fastafile="dir/fastaFile.fasta","NT","18S rRNA"
+#' fastaSelect1 = "Label 1", fastaSelect2 = "Label 2"
+#' )
 #'
-#' Warning! Some groups do not some markers
-#' plot will show Noting
-#' ABI_Helminth(0.02,"CE","28S rRNA")
-#'
-#' 
-#' @import ggplot2 stringr utils
-# 
-ABI_Helminth <- function(distance=0, group = "NAS",marker="18S rRNA"){
-  data <- Load.data(group = group)
-  ranges <- Level.Available(data = data, marker = marker, level.out = TRUE)
-  distanceBetween <- Check.distance.between(group=group,distance=distance,marker=marker)
-  ABI_warning(distance = distance,group = group, marker = marker,distanceBetween=distanceBetween)
-  ShowRanges(ranges = ranges,group = group,distance = distance, marker = marker)
+#' @import ggplot2 stringr utils ape
+#
+ABI_Helminth <- function(distance=0,Fastafile = NULL,fastaSelect1=1,fastaSelect2=2, group = "NAS",marker="18S rRNA"){
+  if(distance < 0 && is.null(Fastafile)){
+    warning(("• Number must more than 0"))
+  }else{
+    data <- Load.data(group = group)
+    ranges <- Level.Available(data = data, marker = marker, level.out = TRUE)
+    if(is.null(Fastafile)){
+      distanceBetween <- Check.distance.between(group=group,distance=distance,marker=marker)
+      ABI_warning(distance = distance,group = group, marker = marker,distanceBetween=distanceBetween)
+      ShowRanges(ranges = ranges,group = group,distance = distance, marker = marker)
+    }else{
+        if(is.null(fastaSelect1)){
+          warning(("• fastaSelect1 is NULL. System set fastaSelect1=1"))
+          fastaSelect1 <- 1
+        }
+          if(is.null(fastaSelect2)){
+          warning(("• fastaSelect2 is NULL. System set fastaSelect2=2"))
+          fastaSelect2 <- 2
+        }
+        #read Fasta file
+        sequences <- read.dna(Fastafile,format = "fasta")
+        # Convert sequences to distance matrix
+        dist_matrix <- dist.dna(sequences, model = "raw")
+        # Construct neighbor-joining tree
+        dna_tree <- nj(dist_matrix)
+        # Calculate genetic distance between each pair of sequences
+        genetic_distance <- cophenetic(dna_tree)
+
+        # 1st Select
+        col_Select <- fastaSelect1
+        # 2nd Select
+        row_Select <- fastaSelect2
+        distance <-   genetic_distance[row_Select,col_Select]
+
+        distanceBetween <- Check.distance.between(group=group,distance=distance,marker=marker)
+        ABI_warning(distance = distance,group = group, marker = marker,distanceBetween=distanceBetween)
+        ShowRanges(ranges = ranges,group = group,distance = distance, marker = marker)
+      }
+    }
 }
 
 # min/max columns
@@ -81,10 +120,9 @@ MinMax <- function(level, marker, data){
 Load.data <- function(group){
   dir <- system.file(package='ABI')
   data <- switch(group,
-
-                 NAS = read.csv(paste0(dir,'/ABI/data/nematode1.csv')),
-                 NS = read.csv(paste0(dir,'/ABI/data/nematode2.csv')),
-                 NT = read.csv(paste0(dir,'/ABI/data/nematode3.csv')),
+                 NT = read.csv(paste0(dir,'/ABI/data/nematode1.csv')),
+                 NAS = read.csv(paste0(dir,'/ABI/data/nematode2.csv')),
+                 NS = read.csv(paste0(dir,'/ABI/data/nematode3.csv')),
                  TR = read.csv(paste0(dir,'/ABI/data/trematode1.csv')),
                  TRD = read.csv(paste0(dir,'/ABI/data/trematode2.csv')),
                  CE = read.csv(paste0(dir,'/ABI/data/cestode.csv')))
@@ -173,52 +211,73 @@ ShowRanges <- function(ranges, distance=NULL, group = NULL,marker=NULL){
 
 }
 ABI_warning <-function(distance,group,marker,distanceBetween){
-  if(distance==0){
-    if(group == "NAS" && (marker =="18S rRNA" || marker =="28S rRNA" || marker =="ITS1" || marker =="ITS2" || marker =="COII" ||marker =="12S rRNA")){
-      warning("• Suggest to use mt 16S rRNA gene or mt COII as an alternative genetic marker\n• Although 18S has the smallest gap, but the low sequence variation at the genus-species level is challenging for species delimitation\n• Suggest nematode 16S primer from nematode systematics paper")
-    }else if (group == "NT" && (marker =="18S rRNA" || marker =="ITS2")){
-      warning("• Suggest to use mt 12S")
-    }else if (group == "TR"&& (marker =="18S rRNA" || marker =="ITS1" || marker =="ITS2")){
-      warning("• Suggest to use mt 16S \n•	Although 18S has small gap (same as 16S), but the low sequence variation at the genus-species level is challenging for species delimitation")
-    }else if (group == "CE"&& marker =="12S rRNA"){
-      warning("• Recommendation to use another mt genetic marker")
-    }
-  }else{
-
-    if(distanceBetween == "Genus-Species"){
-      if(group == "NAS" || group == "NS"){
-        warning("• Suggest to use mt 16S rRNA gene or mt COII as an alternative genetic marker \n• Although 18S has the smallest gap, but the low sequence variation at the genus-species level is challenging for species delimitation \n• Suggest nematode 16S primer from nematode systematics paper")
-      }else if (group == "NT"){
+    if(distance==0){
+      if(group == "NAS" && (marker =="18S rRNA" || marker =="28S rRNA" || marker =="ITS1" || marker =="ITS2" || marker =="COII" ||marker =="12S rRNA")){
+        warning(("• Suggest to use mt 16S rRNA gene or mt COII as an alternative genetic marker /n
+                  • Although 18S has the smallest gap, but the low sequence variation at the genus-species level is challenging for species delimitation /n
+                  • Suggest nematode 16S primer from nematode systematics paper
+                   "))
+      }else if (group == "NT" && (marker =="18S rRNA" || marker =="ITS2")){
         warning("• Suggest to use mt 12S")
-      }else if (group == "TR"){
-        warning("• Suggest to use mt 16S \n •Although 18S has small gap (same as 16S), but the low sequence variation at the genus-species level is challenging for species delimitation")
-      }else if (group == "CE"){
-        warning("• Suggest to use cytB or 12S (but rarely use cytB for cestodes)")
-      }else{
-        cat("They are between in", distanceBetween)
+      }else if (group == "TR"&& (marker =="18S rRNA" || marker =="ITS1" || marker =="ITS2")){
+        warning(("• Suggest to use mt 16S /n
+                       • Although 18S has small gap (same as 16S), but the low sequence variation at the genus-species level is challenging for species delimitation
+                         "))
+      }else if (group == "CE"&& marker =="12S rRNA"){
+        warning(("• Recommendation to use another mt genetic marker"))
       }
-    }else if(distanceBetween == "Family-Genus"){
-      if(group == "NAS" ){
-        warning("• Suggest to use mt 12S rRNA gene as an alternative genetic marker, with primer from nematode systematics paper")
-      }else if (group == "NS"){
-        warning("• Suggest to use mt COI or mt 12S or mt 16S\n•	But caution for COI primers (universal primers might not be able to amplify, should use specific primers)")
-      }else if (group == "NT"){
-        cat("They are between in", distanceBetween)
-      }else if (group == "TR"){
-        warning("• Suggest 28S, but need to caution (low sequence variation, alignment region) \n•	Other alternative is the mt genetic markers")
-      }else if (group == "CE"){
-        warning("• Suggest COI or 16S")
-      }else{
-        cat("They are between in", distanceBetween)
-      }
-    }else if(distanceBetween == "Order-Family"){
-      cat("They are between in", distanceBetween)
-    }else if(distanceBetween == "Out"){
-      #out of bounds
-      warning("• Out Of Bounds")
     }else{
-      cat("They are different in", distanceBetween,"level.")
-    }
 
-  }
+      if(distanceBetween == "Genus-Species"){
+        if(group == "NAS" || group == "NS"){
+          warning(("• Suggest using the mt 16S rRNA or COII gene as an alternative genetic marker /n
+                         • Refer to the suggested PCR primer list for the 16S primer for nematodes
+                          "))
+        }else if (group == "NT"){
+          warning(("• Suggest using the mt 12S rRNA gene as an alternative genetic marker /n
+                    • Refer to the suggested PCR primer list for the 12S primer for nematodes
+                    "))
+        }else if (group == "TR"){
+          warning(paste(" • Suggest using the mt 16S rRNA gene as an alternative genetic marker /n
+                       • Refer to the suggested PCR primer list for the 16S primer for platyhelminths /n
+                       "))
+        }else if (group == "CE"){
+          warning(paste("• Suggest using the mt 12S rRNA gene as an alternative genetic marker /n
+                         • Refer to the suggested PCR primer list for the 12S primer for platyhelminths
+                        "))
+        }else{
+          cat(paste("• They are different in", distanceBetween,"level."))
+        }
+      }else if(distanceBetween == "Family-Genus"){
+        if(group == "NAS" ){
+          warning(paste("• Suggest using the mt 12S rRNA gene as an alternative genetic marker/n
+                         • Refer to the suggested PCR primer list for the 12S primer for nematodes
+                         "))
+        }else if (group == "NS"){
+          warning(paste("• Suggest using the mt COI, 12S, or 16S rRNA gene as an alternative genetic marker/n
+                         • Refer to the suggested PCR primer list
+                          "))
+        }else if (group == "NT"){
+          warning(h2("They are between in", distanceBetween))
+        }else if (group == "TR"){
+          warning(("• Suggest using the nuclear 28S rRNA gene as an alternative genetic marker/n
+                 • Refer to the suggested PCR primer list for the 28S primer for platyhelminths
+                      "))
+        }else if (group == "CE"){
+          warning(("• Suggest using the mt 16S rRNA or COI gene as an alternative genetic marker/n
+                    • Refer to the suggested PCR primer list
+                    • "))
+        }else{
+          cat(paste("• They are different in", distanceBetween,"level."))
+        }
+      }else if(distanceBetween == "Order-Family"){
+        warning(paste("• They are between in", distanceBetween))
+      }else if(distanceBetween == "Out"){
+        #out of bounds
+        warning(("• Out Of Bounds"))
+      }else{
+        cat(paste("• They are different in", distanceBetween,"level."))
+      }
+
+    }
 }

@@ -13,7 +13,7 @@ The ABIapp requires the following information: an aligned FASTA file or genetic 
 
 4.	Select the genetic marker
 
-5.	Select ‘Go!’ to run the application
+5.	Select ‘Submit!’ to run the application
 
 #### For the genetic distance value:
 
@@ -25,4 +25,4 @@ The ABIapp requires the following information: an aligned FASTA file or genetic 
 
 3.	Select the genetic marker
 
-4.	Select ‘Go!’ to run the application
+4.	Select ‘Submit!’ to run the application

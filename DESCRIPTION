@@ -1,27 +1,30 @@
 Package: ABI
 Type: Package
 Title: Applying taxonomic Boundaries for species Identification (ABI)
-Version: 0.3
+Version: 0.4
 Authors@R: 
     person("Sompob", "Saralamba", ,"saralamba@gmail.com" , role = c("aut", "cre"),comment = c(ORCID = "0000-0002-5460-8447" ,GitHub="https://github.com/slphyx"))
 Maintainers@R: 
     person("Tanaphum", "Wichaita", ,"tana_jumbo@hotmail.com",role = c("aut", "cre"),comment = c(GitHub="https://github.com/tanaphum"))
 Description: ABIapp was developed for users who require assistance in species delimitation of parasitic helminths. The application was developed from the GenBank sequence database of all current parasitic helminths to determine the cut-off genetic distance values at each taxonomic level (from species to order) using a machine learning algorithm (Chan et al., 2021). The ABIapp is easy to use, as users just have to input the genetic distance value of the molecular genetic marker often used to classify parasitic helminths (18S rRNA, 28S rRNA, ITS1, ITS2, COI, COII, cytB, ND1, 12S rRNA, and 16S rRNA). The ABIapp will display the specimen’s taxonomic status based on the input genetic distance. Moreover, the ABIapp can recommend alternative genetic markers in cases where the initial molecular genetic marker used is not suitable.
-License: MIT + file LICENSE
+License: GNU GPL + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Imports:
   ggplot2,
   shiny,
   shinythemes,
+  shinydashboard,
+  htmltools,
+  shinyjs,
   stringr,
   markdown,
   shinyWidgets,
   bsplus,
   seqinr,
-  ape,
-  ggtree
+  ape
 Suggests: 
+    ggtree,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

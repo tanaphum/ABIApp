@@ -15,3 +15,6 @@ Open browser
 \description{
 Run the standalone version
 }
+\examples{
+run_app_ABI()
+}
